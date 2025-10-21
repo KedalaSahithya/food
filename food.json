@@ -1,0 +1,40 @@
+// Singleton Class for Payment Session
+class PaymentSession {
+  constructor(username) {
+    if (PaymentSession.instance) {
+      return PaymentSession.instance; // return the existing instance
+    }
+    this.username = username;
+    this.loggedInTime = new Date().toLocaleTimeString();
+    PaymentSession.instance = this; // save this instance
+  }
+
+  getSessionDetails() {
+    return `✅ Payment session active for ${this.username} (Started at: ${this.loggedInTime})`;
+  }
+}
+
+// Login Handling Logic
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const message = document.getElementById("message");
+
+  // Simple check
+  if (username === "" || password === "") {
+    message.style.color = "red";
+    message.innerText = "⚠️ Please enter both username and password.";
+    return;
+  }
+
+  // Create Singleton instance
+  const session1 = new PaymentSession(username);
+  const session2 = new PaymentSession("AnotherUser"); // tries to create a second instance
+
+  // Demonstrate singleton behavior
+  if (session1 === session2) {
+    message.style.color = "green";
+    message.innerText = session1.getSessionDetails() + "\n(Singleton confirmed: only one session exists)";
+  }
+});
